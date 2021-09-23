@@ -1,0 +1,212 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+
+:root {
+  --color-primary: #4b6587;
+  --color-background: #f4f4f4;
+  --color-gray: #f0f0f0;
+  --color-gray-light: #f7f6f2;
+  --color-gray-dark: #6a6a6a;
+  --border-light: 1px solid rgba(75, 101, 135, 0.1);
+  --border-dark: 1px solid rgba(75, 101, 135, 0.25);
+  --font-family: "Source Sans Pro", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-background);
+  font-family: var(--font-family);
+  padding: 1em;
+  border: var(--border-light);
+}
+
+p {
+  font-size: 14px;
+}
+
+input,
+select {
+  outline: none;
+  color: var(--color-gray-dark);
+}
+
+input:disabled,
+select:disabled {
+  background: var(--color-gray);
+}
+
+header {
+  display: flex;
+  justify-content: flex-start;
+  padding-bottom: 1em;
+}
+
+header > .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header > .title {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0.75em;
+}
+
+header > .title > h2 {
+  font-weight: 600;
+  font-size: 24px;
+  margin: 0;
+}
+
+header > .title > p {
+  font-weight: 300;
+  margin: 0;
+}
+
+main {
+  padding: 30px;
+  border: var(--border-light);
+  background: var(--color-gray-light);
+}
+
+main > div {
+  display: flex;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-bottom: 10px;
+}
+
+main > div > label {
+  width: 80px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+main input,
+main select {
+  padding: 0.5em;
+  border: var(--border-dark);
+  border-radius: 5px;
+}
+
+main input:focus {
+  border-color: var(--color-primary);
+}
+
+button {
+  padding-left: 1em;
+  padding-right: 1em;
+  font-size: 12px;
+  border: var(--border-light);
+  border-radius: 5px;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+button.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+#browse-btn {
+  margin-left: 1em;
+}
+
+#pathInput {
+  display: none;
+}
+
+#pathText {
+  flex: 1;
+}
+
+#type,
+#prefix {
+  width: 150px;
+}
+
+/* sequence group */
+.seq-group {
+  border: var(--border-light);
+  border-radius: 5px;
+  position: relative;
+  margin-top: 24px;
+}
+
+.group-label {
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+  position: absolute;
+  top: -10px;
+  left: 4px;
+  width: 70px;
+  text-align: center;
+  background: var(--color-gray-light);
+}
+
+.seq-group > .grid {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.seq-group > .grid > div {
+  display: flex;
+  padding: 1.5em 0;
+}
+
+.seq-group > .grid > div > label {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  color: var(--color-gray-dark);
+}
+
+.seq-group > .grid > div > input {
+  width: 75px;
+  margin-left: 1em;
+}
+
+.seq-group > .grid > div > select {
+  margin-left: 1em;
+}
+
+/* footer styles */
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1em;
+}
+
+footer p {
+  font-size: 13px;
+  margin-top: 0;
+  margin-bottom: 0.25em;
+  color: var(--color-gray-dark);
+}
+
+footer .action-buttons {
+  display: flex;
+  align-items: center;
+}
+
+footer .action-buttons button {
+  padding: 0.5em 1em;
+}
+
+#rename-btn {
+  margin-right: 1em;
+}

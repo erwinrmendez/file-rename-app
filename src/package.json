@@ -1,0 +1,21 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "window": {
+    "title": "Rename App",
+    "icon": "app/icon.png",
+    "width": 700,
+    "height": 465,
+    "position": "center",
+    "min_width": 700,
+    "min_height": 465,
+    "max_width": 700,
+    "max_height": 465
+  },
+  "author": "Erwin Mendez"
+}

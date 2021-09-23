@@ -1,0 +1,16 @@
+{
+  "name": "rename",
+  "version": "1.0.0",
+  "description": "App to rename files",
+  "main": "index.html",
+  "scripts": {
+    "start": "nw src/",
+    "build": "nwbuild --platforms win64 --buildDir build/ rename/"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nw": "^0.56.1",
+    "nw-builder": "^3.5.7"
+  }
+}

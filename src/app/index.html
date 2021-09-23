@@ -1,0 +1,97 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Rename App</title>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="./icon.png" alt="Rename" />
+      </div>
+      <div class="title">
+        <h2>Rename</h2>
+        <p>
+          Change the name of files in current directory to custom generated
+          pattern
+        </p>
+      </div>
+    </header>
+    <main>
+      <div>
+        <label for="pathText">Path</label>
+        <input
+          type="file"
+          nwdirectory
+          nwdirectorydesc="Select Folder"
+          name="pathInput"
+          id="pathInput"
+        />
+        <input
+          type="text"
+          name="pathText"
+          id="pathText"
+          placeholder="Select a folder..."
+        />
+        <button id="browse-btn">Browse</button>
+      </div>
+      <div>
+        <label for="type">File Type</label>
+        <select name="type" id="type" disabled></select>
+      </div>
+      <div>
+        <label for="prefix">Prefix</label>
+        <input type="text" name="prefix" id="prefix" disabled />
+      </div>
+      <div class="seq-group">
+        <span class="group-label">Sequence</span>
+        <div class="grid">
+          <div>
+            <label for="join">Join by:</label>
+            <select name="join" id="join" value="" disabled>
+              <option value=""></option>
+              <option value="-">Dash (-)</option>
+              <option value="_">Underscore (_)</option>
+            </select>
+          </div>
+          <div>
+            <label for="startAt">Start at:</label>
+            <input
+              type="number"
+              name="startAt"
+              id="startAt"
+              min="1"
+              value="1"
+              disabled
+            />
+          </div>
+          <div>
+            <label for="digits">Pad to length:</label>
+            <input
+              type="number"
+              name="padding"
+              id="padding"
+              min="1"
+              value="1"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div>
+        <p id="example"></p>
+        <p id="message"></p>
+      </div>
+      <div class="action-buttons">
+        <button id="rename-btn" class="btn-primary">Rename</button>
+        <button id="cancel-btn">Cancel</button>
+      </div>
+    </footer>
+
+    <script src="index.js"></script>
+  </body>
+</html>

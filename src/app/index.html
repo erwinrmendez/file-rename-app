@@ -43,14 +43,26 @@
       </div>
       <div>
         <label for="prefix">Prefix</label>
-        <input type="text" name="prefix" id="prefix" disabled />
+        <input
+          class="patternInput"
+          type="text"
+          name="prefix"
+          id="prefix"
+          disabled
+        />
       </div>
       <div class="seq-group">
         <span class="group-label">Sequence</span>
         <div class="grid">
           <div>
             <label for="join">Join by:</label>
-            <select name="join" id="join" value="" disabled>
+            <select
+              class="patternInput"
+              name="join"
+              id="join"
+              value=""
+              disabled
+            >
               <option value=""></option>
               <option value="-">Dash (-)</option>
               <option value="_">Underscore (_)</option>
@@ -59,6 +71,7 @@
           <div>
             <label for="startAt">Start at:</label>
             <input
+              class="patternInput"
               type="number"
               name="startAt"
               id="startAt"
@@ -70,6 +83,7 @@
           <div>
             <label for="digits">Pad to length:</label>
             <input
+              class="patternInput"
               type="number"
               name="padding"
               id="padding"

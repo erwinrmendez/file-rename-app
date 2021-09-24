@@ -9,6 +9,7 @@
   "window": {
     "title": "Rename App",
     "icon": "app/icon.png",
+    "toolbar": true,
     "width": 700,
     "height": 465,
     "position": "center",
@@ -17,5 +18,10 @@
     "max_width": 700,
     "max_height": 465
   },
-  "author": "Erwin Mendez"
+  "developer": {
+    "showDevToolsOnStartup": true
+  },
+  "dependencies": {
+    "mime": "^2.5.2"
+  }
 }

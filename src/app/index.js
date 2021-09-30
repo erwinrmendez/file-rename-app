@@ -1,9 +1,7 @@
-// Modules and variables
-const win = nw.Window.get();
+// Modules
 const fs = require("fs");
 const mime = require("mime");
-let types = {};
-let filenamePattern = "";
+const win = nw.Window.get();
 
 // Devtools
 // win.showDevTools();
@@ -22,6 +20,8 @@ const prefixInput = document.getElementById("prefix");
 const joinInput = document.getElementById("join");
 const startAtInput = document.getElementById("startAt");
 const paddingInput = document.getElementById("padding");
+
+// info elements
 const example = document.getElementById("example");
 const message = document.getElementById("message");
 
@@ -43,7 +43,11 @@ document.querySelectorAll(".suffixInput").forEach((item) => {
 });
 
 // On input event for prefix element
-prefixInput.addEventListener("input", () => {
+prefixInput.addEventListener("input", (e) => {
+  // replace special characters on input
+  let str = e.target.value;
+  prefixInput.value = str.replace(/[#%&{}\/\\<>^*?$!'":.,+@|]+$/, "").trim();
+
   updatePattern();
 });
 
@@ -64,37 +68,59 @@ renameBtn.addEventListener("click", () => {
     return;
   } else {
     message.innerText = "";
+    example.innerText = "";
   }
 
   let ext = mime.getExtension(typeInput.value);
-  let files;
-
-  try {
-    files = fs.readdirSync(pathText.value);
-  } catch (error) {
-    alert(error);
-    return;
-  }
-
-  // rename files
   let seq = Number(startAtInput.value);
+  let path = pathText.value;
+  let numberOfFiles = 0;
+  let counter = 0;
 
-  files
-    .filter((file) => mime.getType(file) === typeInput.value)
-    .forEach((file) => {
-      const oldPath = `${pathText.value}\\${file}`;
-      const newFilename = `${getNewName(seq.toString())}.${ext}`;
-      const newPath = `${pathText.value}\\${newFilename}`;
+  fs.promises
+    .readdir(path, { withFileTypes: true })
+    .then((dirents) => {
+      return dirents.filter(
+        (dirent) =>
+          dirent.isFile() && mime.getType(dirent.name) === typeInput.value
+      );
+    })
+    .then((dirents) => {
+      numberOfFiles = dirents.length;
 
-      try {
+      dirents.forEach((dirent) => {
+        const oldPath = `${path}\\${dirent.name}`;
+        const newFilename = `${getNewName(seq.toString())}.${ext}`;
+        const newPath = `${path}\\${newFilename}`;
+
         fs.renameSync(oldPath, newPath);
         seq += 1;
-      } catch (error) {
-        alert(error);
-      }
-    });
+        counter += 1;
+      });
+    })
+    .then(() => {
+      alert(
+        `Renaming process completed successfully! Total files renamed: ${counter}.`
+      );
 
-  alert("Total files renamed: " + (seq - 1));
+      // reset inputs
+      pathText.value = "";
+      typeInput.value = "";
+      prefixInput.value = "";
+      setDisabled(true);
+    })
+    .catch((err) => {
+      let ts = Date(Date.now()).toLocaleString();
+      let message = `${ts}: ${err}\r\n`;
+
+      // log error to file
+      logError(message, path);
+
+      // show alert
+      let alertMessage = `There has been an error while renaming the files. Go to '${path}\\log\\error-log.txt' for more information.\n\n`;
+      alertMessage += `${counter} out of ${numberOfFiles} files have been renamed.`;
+      alert(alertMessage);
+    });
 });
 
 // click on Cancel event
@@ -136,7 +162,7 @@ const openExplorer = () => {
 
       // get files in current dir
       getFiles(path).then((files) => {
-        types = Object.keys(getFileTypes(files));
+        const types = Object.keys(getFileTypes(files));
 
         if (types.length === 0) {
           message.innerText =
@@ -199,7 +225,7 @@ const getFileTypes = (files) => {
 
 // update example pattern
 const updatePattern = () => {
-  filenamePattern = getNewName(startAtInput.value);
+  const filenamePattern = getNewName(startAtInput.value);
 
   // show example name pattern in view
   example.innerText = "E.g. " + filenamePattern;
@@ -212,4 +238,27 @@ const getNewName = (sequenceNumber) => {
     joinInput.value +
     sequenceNumber.padStart(parseInt(paddingInput.value), "0")
   );
+};
+
+// log error to file
+const logError = (message, folderPath) => {
+  const filename = "error-log.txt";
+  const filePath = `${folderPath}\\log\\${filename}`;
+
+  if (fs.existsSync(filePath)) {
+    // append new line to file
+    fs.appendFile(filePath, message, (err) => {
+      if (err) throw err;
+    });
+  } else {
+    // create folder
+    fs.mkdir(folderPath + "\\log", { recursive: true }, (err) => {
+      if (err) throw err;
+    });
+
+    // create file and append line
+    fs.writeFile(filePath, message, (err) => {
+      if (err) throw err;
+    });
+  }
 };

@@ -23,51 +23,79 @@ const joinInput = document.getElementById("join");
 const startAtInput = document.getElementById("startAt");
 const paddingInput = document.getElementById("padding");
 const example = document.getElementById("example");
+const message = document.getElementById("message");
 
 // EVENT LISTENERS
 // click on Browse event
 browseBtn.addEventListener("click", () => {
-  pathInput.addEventListener("change", (e) => {
-    let path = e.target.value;
-
-    if (path === "") {
-      pathText.value = "";
-    } else {
-      pathText.value = path;
-      setDisabled(false);
-
-      // get files in current dir
-      getFiles(path).then((files) => {
-        // add file types to dropdown
-        types = getFileTypes(files);
-
-        Object.keys(types).map((type) => {
-          const element = document.createElement("option");
-          element.value = type;
-          element.innerText = type;
-
-          // add element to DOM
-          typeInput.appendChild(element);
-        });
-      });
-    }
-  });
-
-  pathInput.click();
+  openExplorer();
 });
 
-// On change event for input elements
-document.querySelectorAll(".patternInput").forEach((item) => {
-  item.addEventListener("change", (e) => {
-    updatePattern();
+pathText.addEventListener("click", () => {
+  openExplorer();
+});
 
-    // show example name pattern
-    example.innerText = "E.g. " + filenamePattern;
+// On change event for suffix-input elements
+document.querySelectorAll(".suffixInput").forEach((item) => {
+  item.addEventListener("change", () => {
+    updatePattern();
   });
+});
+
+// On input event for prefix element
+prefixInput.addEventListener("input", () => {
+  updatePattern();
 });
 
 // click on Rename event
-renameBtn.addEventListener("click", () => {});
+renameBtn.addEventListener("click", () => {
+  // check inputs
+  if (pathText.value === "") {
+    message.innerText = "Path cannot be empty.";
+    pathText.focus();
+    return;
+  } else if (typeInput.value === "") {
+    message.innerText = "Please select a file type.";
+    typeInput.focus();
+    return;
+  } else if (prefixInput.value === "") {
+    message.innerText = "Prefix cannot be empty.";
+    prefixInput.focus();
+    return;
+  } else {
+    message.innerText = "";
+  }
+
+  let ext = mime.getExtension(typeInput.value);
+  let files;
+
+  try {
+    files = fs.readdirSync(pathText.value);
+  } catch (error) {
+    alert(error);
+    return;
+  }
+
+  // rename files
+  let seq = Number(startAtInput.value);
+
+  files
+    .filter((file) => mime.getType(file) === typeInput.value)
+    .forEach((file) => {
+      const oldPath = `${pathText.value}\\${file}`;
+      const newFilename = `${getNewName(seq.toString())}.${ext}`;
+      const newPath = `${pathText.value}\\${newFilename}`;
+
+      try {
+        fs.renameSync(oldPath, newPath);
+        seq += 1;
+      } catch (error) {
+        alert(error);
+      }
+    });
+
+  alert("Total files renamed: " + (seq - 1));
+});
 
 // click on Cancel event
 cancelBtn.addEventListener("click", () => {
@@ -75,7 +103,7 @@ cancelBtn.addEventListener("click", () => {
 });
 
 // toggle disable property on inputs/selects
-pathText.addEventListener("input", (e) => {
+pathText.addEventListener("change", (e) => {
   let value = e.target.value;
 
   if (value === "") {
@@ -93,6 +121,49 @@ const setDisabled = (bool) => {
   joinInput.disabled = bool;
   startAtInput.disabled = bool;
   paddingInput.disabled = bool;
+};
+
+// open folder explorer
+const openExplorer = () => {
+  pathInput.addEventListener("change", (e) => {
+    let path = e.target.value;
+
+    if (path === "") {
+      pathText.value = "";
+    } else {
+      pathText.value = path;
+      setDisabled(false);
+
+      // get files in current dir
+      getFiles(path).then((files) => {
+        types = Object.keys(getFileTypes(files));
+
+        if (types.length === 0) {
+          message.innerText =
+            "There are no files in selected folder. Please check.";
+          return;
+        } else {
+          message.innerText = "";
+        }
+
+        // remove all previous options (if any)
+        let options = Array.from(typeInput.children);
+        options.forEach((option) => option.remove());
+
+        // add file types to dropdown
+        types.map((type) => {
+          const element = document.createElement("option");
+          element.value = type;
+          element.innerText = type;
+
+          // add element to DOM
+          typeInput.appendChild(element);
+        });
+      });
+    }
+  });
+
+  pathInput.click();
 };
 
 // get files from path
@@ -128,6 +199,17 @@ const getFileTypes = (files) => {
 
 // update example pattern
 const updatePattern = () => {
-  pad = startAtInput.value.padStart(parseInt(paddingInput.value), "0");
-  filenamePattern = prefixInput.value + joinInput.value + pad;
+  filenamePattern = getNewName(startAtInput.value);
+
+  // show example name pattern in view
+  example.innerText = "E.g. " + filenamePattern;
+};
+
+// get new name
+const getNewName = (sequenceNumber) => {
+  return (
+    prefixInput.value +
+    joinInput.value +
+    sequenceNumber.padStart(parseInt(paddingInput.value), "0")
+  );
 };
